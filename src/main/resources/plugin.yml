@@ -1,0 +1,14 @@
+name: Immunity
+version: '${project.version}'
+main: com.gmail.perpltxed.immunity.Immunity
+api-version: 1.18
+authors: [ Perpltxed ]
+commands:
+  immunity:
+    description: Grants immunity to a player
+    usage: /immunity <player> <duration>
+
+permissions:
+  immunity.admin:
+    description: Allows administrators to use the /immunity command
+    default: op
