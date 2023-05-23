@@ -1,6 +1,7 @@
 package com.gmail.perpltxed.immunity;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,13 +30,18 @@ public class Immunity extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("immunity")) {
             if (!sender.hasPermission("immunity.admin")) {
-                sender.sendMessage("You do not have permission to use this command.");
+                sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
+                return true;
+            }
+
+            if (args.length < 2) {
+                sender.sendMessage(ChatColor.YELLOW + "Usage: /immunity <player> <duration>");
                 return true;
             }
 
             Player target = Bukkit.getPlayer(args[0]);
             if (target == null || !target.isOnline()) {
-                sender.sendMessage("Player not found or is offline.");
+                sender.sendMessage(ChatColor.RED + "Player not found or is offline.");
                 return true;
             }
 
@@ -43,12 +49,12 @@ public class Immunity extends JavaPlugin {
             try {
                 duration = Integer.parseInt(args[1]);
             } catch (NumberFormatException e) {
-                sender.sendMessage("Invalid duration specified.");
+                sender.sendMessage(ChatColor.RED + "Invalid duration specified.");
                 return true;
             }
 
             grantImmunity(target, duration);
-            sender.sendMessage(target.getName() + " has been granted immunity for " + duration + " seconds.");
+            sender.sendMessage(ChatColor.GREEN + target.getName() + " has been granted immunity for " + duration + " seconds.");
             return true;
         }
         return false;
@@ -70,7 +76,7 @@ public class Immunity extends JavaPlugin {
             public void run() {
                 immunePlayers.remove(player);
                 player.setInvulnerable(false); // Remove invulnerability
-                player.sendMessage("Your immunity has expired.");
+                player.sendMessage(ChatColor.RED + "Your immunity has expired.");
             }
         }.runTaskLater(this, duration * 20); // Convert seconds to ticks (20 ticks per second)
     }
